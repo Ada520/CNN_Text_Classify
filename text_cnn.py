@@ -50,6 +50,18 @@ class TextCNN(object):
                                       name='conv')
                     #Apply nonlinearity
                     h=tf.nn.relu(tf.nn.bias_add(conv,b),name='relu')
+                    #Max_pooling over the output
+                    pooled=tf.nn.max_pool(h,
+                                          ksize=[1,sequence_length-filter_size+1,1,1],
+                                          strides=[1,1,1,1],
+                                          padding="VALID",
+                                          name='pool')
+                    pooled_outputs.append(pooled)
+
+                    #Combined all the pooled features
+                    num_filters_total=num_filters*len(filter_size)
+                    self.h_pool=tf.concat(pooled_outputs,3)
+                    self.h_pool_flat=tf.reshape(self.h_pool,[-1,num_filters_total])
 
 
 
